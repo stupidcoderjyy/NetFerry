@@ -1,5 +1,6 @@
 #include <asio.hpp>
 #include <cstdlib>
+#include <filesystem>
 #include <iostream>
 #include <memory>
 #include <string>
@@ -46,6 +47,16 @@ int main(int argc, char* argv[]) {
 
     net_ferry::common::InitLogger();
     LOG_INFO << "NetFerry starting as '" << config.role() << "' role";
+
+    // Ensure inbox and outbox directories exist.
+    for (const auto& d : {config.inbox_dir(), config.outbox_dir()}) {
+        std::error_code ec;
+        std::filesystem::create_directories(d, ec);
+        if (ec) {
+            LOG_ERROR << "Failed to create directory: " << d << " (" << ec.message() << ")";
+            return 1;
+        }
+    }
 
     asio::io_context io_context;
     auto work_guard = asio::make_work_guard(io_context);

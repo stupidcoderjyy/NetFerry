@@ -14,20 +14,16 @@ set(ASIO_INCLUDE_DIR ${LIB_PREFIX_PATH}/include)
 
 find_package(nlohmann_json REQUIRED)
 find_package(Protobuf REQUIRED)
-find_package(absl REQUIRED)
 find_package(spdlog REQUIRED)
 
-set(PROTOBUF_LIBRARIES
-        protobuf::libprotobuf
-        absl::log
-        absl::hash
-        absl::strings
-        absl::base
-        absl::status
-        absl::statusor
-        absl::synchronization
-        absl::time
-        absl::log_internal_check_op
+file(GLOB ABSL_STATIC_LIBS "${LIB_PREFIX_PATH}/lib/libabsl_*.a")
+
+set(PROTOBUF_STATIC_LIBS
+        ${LIB_PREFIX_PATH}/lib/libprotobuf.a
+        ${ABSL_STATIC_LIBS}
+        ${LIB_PREFIX_PATH}/lib/libz.dll.a
+        ${LIB_PREFIX_PATH}/lib/libutf8_validity.a
+        ${LIB_PREFIX_PATH}/lib/libdbghelp.a
 )
 
 add_executable(${PROJECT_NAME} main.cpp)
@@ -39,7 +35,9 @@ target_link_libraries(${PROJECT_NAME}
         stupidcoder::net_ferry_core
         stupidcoder::net_ferry_proto
         spdlog::spdlog
-        ${PROTOBUF_LIBRARIES}
+        "-Wl,--start-group"
+        ${PROTOBUF_STATIC_LIBS}
+        "-Wl,--end-group"
 )
 
 add_subdirectory(proto)
@@ -76,13 +74,3 @@ if(CLANG_FORMAT)
 else()
     message(WARNING "clang-format not found. The 'format' target will not be available.")
 endif()
-
-# 复制 example.json 到构建目录
-add_custom_target(copy_example_json_files
-        COMMAND ${CMAKE_COMMAND} -E copy_if_different
-        ${CMAKE_CURRENT_SOURCE_DIR}/example_in.json
-        ${CMAKE_CURRENT_SOURCE_DIR}/example_out.json
-        $<TARGET_FILE_DIR:${PROJECT_NAME}>
-        COMMENT "Copying example.json to runtime directory"
-)
-add_dependencies(${PROJECT_NAME} copy_example_json_files)

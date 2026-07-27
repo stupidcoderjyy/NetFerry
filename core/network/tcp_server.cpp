@@ -30,7 +30,7 @@ void TcpServer::DoAccept() {
         if (!ec) {
             session->Start();
         } else {
-            LOG_ERROR << "Accept error: " << ec.message();
+            LOG_ERROR << "Accept error: " << common::ToUtf8(ec.message());
         }
         DoAccept();
     });

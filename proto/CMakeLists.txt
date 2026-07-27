@@ -8,7 +8,7 @@ add_library(${TARGET} OBJECT
 add_library(stupidcoder::net_ferry_proto ALIAS ${TARGET})
 
 target_link_libraries(${TARGET} PUBLIC
-        ${PROTOBUF_LIBRARIES}
+        ${PROTOBUF_STATIC_LIBS}
 )
 target_include_directories(${TARGET} PUBLIC
         "$<BUILD_INTERFACE:${PROTO_BINARY_DIR}>"

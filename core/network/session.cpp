@@ -30,7 +30,7 @@ void Session::DoReadHeaders() {
             [this, self](const std::error_code& ec, std::size_t) {
         if (ec) {
             if (ec != asio::error::eof) {
-                LOG_ERROR << "Session read headers error: " << ec.message();
+                LOG_ERROR << "Session read headers error: " << common::ToUtf8(ec.message());
             }
             return;
         }
@@ -86,7 +86,7 @@ void Session::DoReadBody(std::size_t remaining) {
     asio::async_read(socket_, request_buffer_, asio::transfer_exactly(remaining),
             [this, self](const std::error_code& ec, std::size_t) {
         if (ec) {
-            LOG_ERROR << "Session read body error: " << ec.message();
+            LOG_ERROR << "Session read body error: " << common::ToUtf8(ec.message());
             return;
         }
         ProcessRequest();
@@ -157,7 +157,7 @@ void Session::ProcessRequest() {
         return;
     }
 
-    LOG_INFO << filepath << " <- " << packet.method() << " " << packet.url() << " ["
+    LOG_INFO << filepath << " ← " << packet.method() << " " << packet.url() << " ["
              << packet.body().size() << "B]";
     on_register_(request_id_, shared_from_this());
 }
@@ -185,7 +185,7 @@ void Session::DoWrite(const std::string& response) {
     asio::async_write(
             socket_, asio::buffer(response), [this, self](const std::error_code& ec, std::size_t) {
         if (ec) {
-            LOG_ERROR << "Session write error: " << ec.message();
+            LOG_ERROR << "Session write error: " << common::ToUtf8(ec.message());
         }
         std::error_code ignored;
         socket_.shutdown(asio::ip::tcp::socket::shutdown_both, ignored);

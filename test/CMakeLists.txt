@@ -15,16 +15,23 @@ set(TEST_SRC
 
 add_executable(${TARGET} ${TEST_SRC})
 
+file(GLOB ABSL_STATIC_LIBS "${LIB_PREFIX_PATH}/lib/libabsl_*.a")
+
+set(PROTOBUF_STATIC_LIBS
+        ${LIB_PREFIX_PATH}/lib/libprotobuf.a
+        ${ABSL_STATIC_LIBS}
+        ${LIB_PREFIX_PATH}/lib/libz.dll.a
+        ${LIB_PREFIX_PATH}/lib/libutf8_validity.a
+        ${LIB_PREFIX_PATH}/lib/libdbghelp.a
+)
+
 target_link_libraries(${TARGET} PRIVATE
         GTest::gtest_main
         stupidcoder::net_ferry_core
         stupidcoder::net_ferry_proto
-        protobuf::libprotobuf
-        absl::log
-        absl::log_internal_check_op
-        absl::hash
-        absl::strings
-        absl::base
+        "-Wl,--start-group"
+        ${PROTOBUF_STATIC_LIBS}
+        "-Wl,--end-group"
 )
 
 target_include_directories(${TARGET} PRIVATE

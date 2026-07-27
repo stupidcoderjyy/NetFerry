@@ -25,12 +25,13 @@ HttpResponse SendHttpRequest(asio::io_context& io_context,
     std::error_code ec;
     auto endpoints = resolver.resolve(host, port, ec);
     if (ec) {
-        LOG_ERROR << "DNS resolve failed for " << host << ":" << port << " - " << ec.message();
+        LOG_ERROR << "DNS resolve failed for " << host << ":" << port << " - "
+                  << common::ToUtf8(ec.message());
         return result;
     }
     asio::connect(socket, endpoints, ec);
     if (ec) {
-        LOG_ERROR << "Connection failed: " << ec.message();
+        LOG_ERROR << "Connection failed: " << common::ToUtf8(ec.message());
         return result;
     }
 
@@ -47,14 +48,14 @@ HttpResponse SendHttpRequest(asio::io_context& io_context,
 
     asio::write(socket, asio::buffer(request.str()), ec);
     if (ec) {
-        LOG_ERROR << "Write to target failed: " << ec.message();
+        LOG_ERROR << "Write to target failed: " << common::ToUtf8(ec.message());
         return result;
     }
 
     asio::streambuf response_buf;
     asio::read_until(socket, response_buf, "\r\n\r\n", ec);
     if (ec && ec != asio::error::eof) {
-        LOG_ERROR << "Read headers failed: " << ec.message();
+        LOG_ERROR << "Read headers failed: " << common::ToUtf8(ec.message());
         return result;
     }
 
@@ -77,21 +78,18 @@ HttpResponse SendHttpRequest(asio::io_context& io_context,
         if (!header_line.empty() && header_line.back() == '\r') {
             header_line.pop_back();
         }
-        if (header_line.empty()) {
-            break;
-        }
+        if (header_line.empty()) break;
         headers_oss << header_line << "\r\n";
     }
     result.headers = headers_oss.str();
 
-    // Read any remaining body data from the streambuf.
+    // Read remaining body data.
     std::ostringstream body_oss;
     if (response_buf.size() > 0) {
         body_oss << &response_buf;
     }
-    // Read more from socket until EOF.
     std::error_code ignored;
-    while (asio::read(socket, response_buf, asio::transfer_at_least(1), ignored) != 0U) {
+    while (asio::read(socket, response_buf, asio::transfer_at_least(1), ignored)) {
         body_oss << &response_buf;
     }
     result.body = body_oss.str();

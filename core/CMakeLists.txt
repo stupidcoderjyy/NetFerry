@@ -11,17 +11,22 @@ add_library(${TARGET} STATIC
         watcher/directory_watcher.cpp
 )
 
+file(GLOB ABSL_STATIC_LIBS "${LIB_PREFIX_PATH}/lib/libabsl_*.a")
+
+set(PROTOBUF_STATIC_LIBS
+        ${LIB_PREFIX_PATH}/lib/libprotobuf.a
+        ${ABSL_STATIC_LIBS}
+        ${LIB_PREFIX_PATH}/lib/libz.dll.a
+        ${LIB_PREFIX_PATH}/lib/libutf8_validity.a
+        ${LIB_PREFIX_PATH}/lib/libdbghelp.a
+)
+
 target_link_libraries(${TARGET} PRIVATE
         stupidcoder::net_ferry_proto
         nlohmann_json::nlohmann_json
-        protobuf::libprotobuf
-        absl::log
-        absl::log_internal_check_op
-        absl::hash
-        absl::strings
-        absl::base
-        spdlog::spdlog
-        fmt::fmt
+        "-Wl,--start-group"
+        ${PROTOBUF_STATIC_LIBS}
+        "-Wl,--end-group"
 )
 
 target_link_libraries(${TARGET} PUBLIC
