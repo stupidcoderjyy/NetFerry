@@ -42,12 +42,13 @@ target_link_libraries(${PROJECT_NAME}
 add_subdirectory(proto)
 add_subdirectory(thirdparty)
 add_subdirectory(core)
+add_subdirectory(test)
 
-# 代码格式化
+# Code formatting
 find_program(CLANG_FORMAT
         NAMES clang-format
         PATHS ${LIB_PREFIX_PATH}/bin
-        NO_DEFAULT_PATH  # 仅搜索指定路径，不搜索系统默认路径
+        NO_DEFAULT_PATH
 )
 if(NOT CLANG_FORMAT)
     find_program(CLANG_FORMAT NAMES clang-format)
