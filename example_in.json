@@ -1,0 +1,8 @@
+{
+    "role": "inside",
+    "listen_port": 8080,
+    "inbox_dir": "./data",
+    "outbox_dir": "./data",
+    "file_ext_req": ".req",
+    "file_ext_resp": ".resp"
+}

@@ -157,7 +157,8 @@ void Session::ProcessRequest() {
         return;
     }
 
-    LOG_INFO << "Session wrote request " << request_id_ << " to " << filepath;
+    LOG_INFO << filepath << " <- " << packet.method() << " " << packet.url() << " ["
+             << packet.body().size() << "B]";
     on_register_(request_id_, shared_from_this());
 }
 

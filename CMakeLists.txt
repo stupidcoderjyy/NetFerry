@@ -76,3 +76,13 @@ if(CLANG_FORMAT)
 else()
     message(WARNING "clang-format not found. The 'format' target will not be available.")
 endif()
+
+# 复制 example.json 到构建目录
+add_custom_target(copy_example_json_files
+        COMMAND ${CMAKE_COMMAND} -E copy_if_different
+        ${CMAKE_CURRENT_SOURCE_DIR}/example_in.json
+        ${CMAKE_CURRENT_SOURCE_DIR}/example_out.json
+        $<TARGET_FILE_DIR:${PROJECT_NAME}>
+        COMMENT "Copying example.json to runtime directory"
+)
+add_dependencies(${PROJECT_NAME} copy_example_json_files)

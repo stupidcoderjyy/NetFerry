@@ -45,7 +45,8 @@ void InsideProcessor::ProcessRespFile(const std::string& filepath) {
     server_->RemoveSession(request_id);
     common::RemoveFile(filepath);
 
-    LOG_INFO << "InsideProcessor sent response for " << request_id;
+    LOG_INFO << filepath << " <- " << response.status_code() << " [" << response.body().size()
+             << "B]";
 }
 
 }  // namespace net_ferry::processor

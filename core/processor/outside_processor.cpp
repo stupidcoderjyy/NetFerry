@@ -35,8 +35,8 @@ void OutsideProcessor::ProcessReqFile(const std::string& filepath) {
         return;
     }
 
-    LOG_INFO << "OutsideProcessor forwarding request " << request.request_id() << " to "
-             << target_host_ << ":" << target_port_;
+    LOG_INFO << filepath << " -> " << request.method() << " " << request.url() << " ["
+             << request.body().size() << "B]";
 
     std::ostringstream headers_oss;
     for (const auto& [key, value] : request.headers()) {
@@ -75,7 +75,8 @@ void OutsideProcessor::ProcessReqFile(const std::string& filepath) {
     if (!common::WriteMessageToFile(out_file, response)) {
         LOG_ERROR << "Failed to write response file: " << out_file;
     } else {
-        LOG_INFO << "OutsideProcessor wrote response to " << out_file;
+        LOG_INFO << out_file << " <- " << http_resp.status_code << " [" << http_resp.body.size()
+                 << "B]";
     }
 
     common::RemoveFile(filepath);

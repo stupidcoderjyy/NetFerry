@@ -52,8 +52,6 @@ void DirectoryWatcher::handleFileAction(efsw::WatchID,
     }
 
     std::string const full_path = dir + filename;
-    LOG_INFO << "FileWatcher detected new file: " << full_path;
-
     asio::post(io_context_, [this, full_path]() { callback_(full_path); });
 }
 

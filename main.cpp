@@ -48,6 +48,7 @@ int main(int argc, char* argv[]) {
     LOG_INFO << "NetFerry starting as '" << config.role() << "' role";
 
     asio::io_context io_context;
+    auto work_guard = asio::make_work_guard(io_context);
 
     if (config.role() == "inside") {
         auto server = std::make_shared<net_ferry::network::TcpServer>(
@@ -70,8 +71,7 @@ int main(int argc, char* argv[]) {
         std::string port = "80";
         std::string target = config.target_server();
 
-        size_t const proto_end = target.find("://");
-        if (proto_end != std::string::npos) {
+        if (size_t const proto_end = target.find("://"); proto_end != std::string::npos) {
             target = target.substr(proto_end + 3);
         }
 

@@ -1,0 +1,8 @@
+{
+    "role": "outside",
+    "inbox_dir": "./data",
+    "outbox_dir": "./data",
+    "target_server": "http://localhost:9090",
+    "file_ext_req": ".req",
+    "file_ext_resp": ".resp"
+}
