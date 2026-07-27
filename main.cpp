@@ -44,6 +44,7 @@ int main(int argc, char* argv[]) {
         return 1;
     }
 
+    net_ferry::common::InitLogger();
     LOG_INFO << "NetFerry starting as '" << config.role() << "' role";
 
     asio::io_context io_context;

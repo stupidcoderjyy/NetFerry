@@ -15,6 +15,7 @@ set(ASIO_INCLUDE_DIR ${LIB_PREFIX_PATH}/include)
 find_package(nlohmann_json REQUIRED)
 find_package(Protobuf REQUIRED)
 find_package(absl REQUIRED)
+find_package(spdlog REQUIRED)
 
 set(PROTOBUF_LIBRARIES
         protobuf::libprotobuf
@@ -31,11 +32,13 @@ set(PROTOBUF_LIBRARIES
 
 add_executable(${PROJECT_NAME} main.cpp)
 
+target_compile_definitions(${PROJECT_NAME} PRIVATE SPDLOG_SHARED_LIB SPDLOG_COMPILED_LIB SPDLOG_FMT_EXTERNAL)
 target_link_libraries(${PROJECT_NAME}
         PRIVATE
         efsw
         stupidcoder::net_ferry_core
         stupidcoder::net_ferry_proto
+        spdlog::spdlog
         ${PROTOBUF_LIBRARIES}
 )
 

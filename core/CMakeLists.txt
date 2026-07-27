@@ -20,10 +20,14 @@ target_link_libraries(${TARGET} PRIVATE
         absl::hash
         absl::strings
         absl::base
+        spdlog::spdlog
+        fmt::fmt
 )
 
 target_link_libraries(${TARGET} PUBLIC
         efsw
+        spdlog::spdlog
+        fmt::fmt
 )
 
 if(WIN32)
@@ -32,6 +36,7 @@ endif()
 
 add_library(stupidcoder::net_ferry_core ALIAS ${TARGET})
 
+target_compile_definitions(${TARGET} PUBLIC SPDLOG_SHARED_LIB SPDLOG_COMPILED_LIB SPDLOG_FMT_EXTERNAL)
 target_include_directories(${TARGET} PUBLIC
         ${CMAKE_SOURCE_DIR}
         ${PROTOBUF_INCLUDE_DIRS}
