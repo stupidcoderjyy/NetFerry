@@ -1,0 +1,75 @@
+# 基础风格：Google
+BasedOnStyle: Google
+
+# 缩进宽度改为 4 空格
+IndentWidth: 4
+TabWidth: 4
+UseTab: Never
+
+# ----- 关键修改 -----
+# 1. 禁止括号对齐，使用连续缩进
+AlignAfterOpenBracket: false
+
+# 2. 设置续行缩进为 IndentWidth 的两倍（8 空格）
+ContinuationIndentWidth: 8
+
+# 3. 允许函数参数按行打包（若希望每个参数单独一行，可设为 false）
+BinPackParameters: false   # 改为 false 可强制每个参数单独一行；若为 true，clang-format 会在行数不够时压缩参数，但仍受 AlignAfterOpenBracket 控制
+# ------------------
+
+# 访问修饰符缩进偏移
+AccessModifierOffset: -4
+
+# 连续赋值/声明对齐（保持 Google 默认，不强制对齐）
+AlignConsecutiveAssignments: false
+AlignConsecutiveDeclarations: false
+
+# 短函数/条件语句允许单行
+AllowShortFunctionsOnASingleLine: Inline
+AllowShortIfStatementsOnASingleLine: true
+AllowShortLoopsOnASingleLine: false
+
+# 大括号样式：K&R（左大括号不换行）
+BreakBeforeBraces: Attach
+
+# 列宽限制（可根据团队调整，这里设为 100）
+ColumnLimit: 100
+
+# 构造函数初始化列表
+ConstructorInitializerAllOnOneLineOrOnePerLine: true
+ConstructorInitializerIndentWidth: 4
+
+# 函数返回类型换行规则
+AlwaysBreakAfterDefinitionReturnType: None
+AlwaysBreakAfterReturnType: None
+
+# 指针/引用靠左（int* ptr;）
+PointerAlignment: Left
+
+# 保留文件开头的空行
+KeepEmptyLinesAtTheStartOfBlocks: false
+
+# 注释处理：只调整缩进，不重新排版内容
+ReflowComments: Never
+
+# 自动排序 include 头文件
+SortIncludes: true
+
+# 换行惩罚值
+PenaltyExcessCharacter: 100
+PenaltyReturnTypeOnItsOwnLine: 60
+
+# 空格控制
+SpaceAfterCStyleCast: false
+SpaceAfterTemplateKeyword: true
+SpaceBeforeAssignmentOperators: true
+SpaceBeforeParens: ControlStatements
+SpaceInEmptyParentheses: false
+SpacesBeforeTrailingComments: 2
+SpacesInAngles: false
+SpacesInCStyleCastParentheses: false
+SpacesInContainerLiterals: true
+SpacesInParentheses: false
+SpacesInSquareBrackets: false
+
+LambdaBodyIndentation: OuterScope
